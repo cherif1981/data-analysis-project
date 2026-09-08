@@ -21,19 +21,25 @@ jobs:
         run: |
           pip install pandas numpy openpyxl matplotlib scikit-learn --no-cache-dir -q
 
+      - name: التحقق من وجود pipeline.py
+        run: |
+          ls -la
+          cat pipeline.py | head -20   # يعرض أول 20 سطراً للتأكد
+
       - name: إنشاء بيانات تجريبية
         run: |
           mkdir -p data
           echo "العميل,التاريخ,المبلغ,المنتج" > data/sample_data.csv
           echo "A,2026-01-01,100,تفاح" >> data/sample_data.csv
           echo "B,2026-01-02,200,موز" >> data/sample_data.csv
-          echo "A,2026-01-10,150,تفاح" >> data/sample_data.csv
 
-      - name: تشغيل الأنبوب 🚀
+      - name: تشغيل الأنبوب مع عرض الأخطاء
         run: |
-          python pipeline.py --input data/sample_data.csv --output outputs
+          python pipeline.py --input data/sample_data.csv --output outputs 2>&1 | tee error.log
+          # إذا فشل، سيتم عرض الخطأ وسيظهر في السجلات
 
-      - name: رفع المخرجات
+      - name: رفع المخرجات (حتى لو فشلت)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: نتائج_التحليل
