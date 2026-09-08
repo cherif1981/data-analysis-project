@@ -1,8 +1,9 @@
 # src/visualizer/__init__.py
 """
-وحدة التصور
+Visualization module
 """
 
-from src.visualizer.visualizer import Visualizer
+from .visualizer import Visualizer
+from .dashboard import DashboardGenerator  # ✅ Add this line
 
-__all__ = ['Visualizer']
+__all__ = ['Visualizer', 'DashboardGenerator']
