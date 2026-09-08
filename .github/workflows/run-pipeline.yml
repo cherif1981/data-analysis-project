@@ -3,17 +3,18 @@ name: تشغيل أنبوب التحليل
 on:
   push:
     branches: [ master ]
-  workflow_dispatch:
+  workflow_dispatch:  # يسمح بالتشغيل اليدوي من واجهة GitHub
 
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
+
     steps:
       - name: استنساخ الكود
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: إعداد Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
@@ -23,24 +24,30 @@ jobs:
 
       - name: التحقق من وجود pipeline.py
         run: |
+          echo "الملفات الموجودة في الجذر:"
           ls -la
-          cat pipeline.py | head -20   # يعرض أول 20 سطراً للتأكد
+          echo "-- محتوى pipeline.py (أول 10 أسطر):"
+          head -10 pipeline.py || echo "الملف غير موجود!"
 
-      - name: إنشاء بيانات تجريبية
+      - name: إنشاء بيانات تجريبية (إذا لم تكن موجودة)
         run: |
           mkdir -p data
           echo "العميل,التاريخ,المبلغ,المنتج" > data/sample_data.csv
           echo "A,2026-01-01,100,تفاح" >> data/sample_data.csv
           echo "B,2026-01-02,200,موز" >> data/sample_data.csv
+          echo "A,2026-01-10,150,تفاح" >> data/sample_data.csv
+          echo "C,2026-01-15,300,برتقال" >> data/sample_data.csv
+          echo "B,2026-02-01,250,موز" >> data/sample_data.csv
 
-      - name: تشغيل الأنبوب مع عرض الأخطاء
+      - name: تشغيل الأنبوب 🚀
         run: |
-          python pipeline.py --input data/sample_data.csv --output outputs 2>&1 | tee error.log
-          # إذا فشل، سيتم عرض الخطأ وسيظهر في السجلات
+          python pipeline.py --input data/sample_data.csv --output outputs
+          echo "✅ تم التنفيذ. محتوى مجلد outputs:"
+          ls -la outputs/ || echo "المجلد outputs غير موجود!"
 
-      - name: رفع المخرجات (حتى لو فشلت)
-        if: always()
+      - name: رفع المخرجات كملف مضغوط (Artifact)
         uses: actions/upload-artifact@v4
         with:
           name: نتائج_التحليل
           path: outputs/
+          if-no-files-found: warn   # ينبه إذا لم يجد ملفات ولكنه لا يفشل
