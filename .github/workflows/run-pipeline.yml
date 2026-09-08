@@ -22,10 +22,10 @@ jobs:
         run: |
           pip install pandas numpy openpyxl matplotlib scikit-learn --no-cache-dir -q
 
-      - name: التحقق من وجود pipeline.py
+      - name: التحقق من وجود src/pipeline.py
         run: |
-          ls -la
-          head -10 pipeline.py || echo "الملف غير موجود!"
+          ls -la src/
+          head -10 src/pipeline.py || echo "الملف غير موجود في src/!"
 
       - name: إنشاء بيانات تجريبية
         run: |
@@ -41,7 +41,7 @@ jobs:
 
       - name: تشغيل الأنبوب 🚀
         run: |
-          python pipeline.py --input data/sample_data.csv --output outputs
+          python src/pipeline.py --input data/sample_data.csv --output outputs
           echo "✅ محتوى مجلد outputs:"
           ls -la outputs/ || echo "المجلد غير موجود"
 
