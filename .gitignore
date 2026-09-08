@@ -46,4 +46,7 @@ Thumbs.db
 # Secrets
 config/secrets.yaml
 *.key
-*.pem
+*.pem"data/*.csv" 
+"reports/*.png" 
+"reports/*.pdf" 
+"*.log" 
