@@ -1,0 +1,39 @@
+name: تشغيل أنبوب التحليل
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # تتيح لك الضغط على زر للتشغيل اليدوي
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: استنساخ الكود
+        uses: actions/checkout@v3
+
+      - name: إعداد Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: تثبيت المكتبات
+        run: |
+          pip install pandas numpy openpyxl matplotlib scikit-learn
+
+      - name: إنشاء بيانات تجريبية (اختياري)
+        run: |
+          mkdir -p data
+          echo "العميل,التاريخ,المبلغ,المنتج" > data/sample_data.csv
+          echo "A,2026-01-01,100,تفاح" >> data/sample_data.csv
+          echo "B,2026-01-02,200,موز" >> data/sample_data.csv
+
+      - name: تشغيل الأنبوب 🚀
+        run: |
+          python pipeline.py --input data/sample_data.csv --output outputs
+
+      - name: رفع المخرجات (لتحميلها بعد التنفيذ)
+        uses: actions/upload-artifact@v4
+        with:
+          name: نتائج_التحليل
+          path: outputs/
