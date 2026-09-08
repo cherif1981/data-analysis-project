@@ -1,27 +1,104 @@
+# config/config.yaml
+# Data Configuration
 data:
   source: "data/sales.csv"
-  date_column: "purchase_date"
-  customer_id: "customer_id"
+  columns:
+    customer_id: "customer_id"
+    purchase_date: "purchase_date"
+    amount: "amount"
+    product_category: "product_category"
+  date_format: "%Y-%m-%d"
+  encoding: "utf-8"
+  sample_size: null  # null for all data
 
+# Analysis Configuration
 analysis:
   rfm:
     reference_date: "2026-09-08"
-    segments: ["Champions", "Loyal", "Potential", "New", "At Risk"]
+    segments: ["Champions", "Loyal", "Potential", "New", "At Risk", "Others"]
+    scoring:
+      recency_weights: [4, 3, 2, 1]  # R score mapping
+      frequency_weights: [1, 2, 3, 4]  # F score mapping
+      monetary_weights: [1, 2, 3, 4]  # M score mapping
   
   forecast:
     periods: 12
-    model: "prophet"
+    method: "auto"  # auto, arima, moving_average, simple
+    confidence_interval: 0.95
+  
+  seasonal:
+    period: null  # auto-detect if null
+    model: "additive"  # additive or multiplicative
   
   kpis:
-    - total_revenue
-    - average_order_value
-    - customer_acquisition_cost
+    calculate:
+      - total_revenue
+      - average_order_value
+      - total_customers
+      - active_customers
+      - customer_acquisition_cost
+      - conversion_rate
+      - churn_rate
+      - retention_rate
+      - customer_lifetime_value
+  
+  clv:
+    method: "historical"  # historical, predictive
+    discount_rate: 0.1
+    time_horizon: 12  # months
+  
+  retention:
+    cohort_period: "M"  # M for month, W for week, D for day
+    max_periods: 12
 
+# Output Configuration
+output:
+  base_dir: "outputs"
+  reports_dir: "reports"
+  plots_dir: "plots"
+  data_dir: "data_outputs"
+  
+  formats:
+    csv: true
+    excel: true
+    json: true
+    html: true
+    pdf: false  # PDF is optional
+  
+  file_names:
+    csv_data: "analysis_data.csv"
+    csv_kpis: "kpis.csv"
+    json_summary: "summary.json"
+    excel_report: "report.xlsx"
+    html_report: "report.html"
+    pdf_report: "report.pdf"
+  
+  timestamp: true  # Add timestamp to file names
+
+# Visualization Configuration
 visualization:
   output_dir: "reports/plots/"
   format: "png"
   dpi: 300
+  figsize: [12, 8]
+  style: "default"
+  colors:
+    primary: "#3498db"
+    secondary: "#2ecc71"
+    danger: "#e74c3c"
+    warning: "#f39c12"
+    dark: "#2c3e50"
 
-reporting:
-  output_dir: "reports/"
-  formats: ["excel", "html", "pdf"]
+# Logging Configuration
+logging:
+  level: "INFO"
+  file: "logs/pipeline.log"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+
+# Error Handling
+error_handling:
+  raise_on_error: true
+  log_errors: true
+  continue_on_analysis_error: true
+  max_retries: 3
