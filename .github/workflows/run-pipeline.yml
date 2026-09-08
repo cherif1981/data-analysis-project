@@ -3,7 +3,7 @@ name: تشغيل أنبوب التحليل
 on:
   push:
     branches: [ master ]
-  workflow_dispatch:  # يتيح التشغيل اليدوي من زر
+  workflow_dispatch:
 
 jobs:
   run-pipeline:
@@ -19,7 +19,7 @@ jobs:
 
       - name: تثبيت المكتبات
         run: |
-          pip install pandas numpy openpyxl matplotlib scikit-learn
+          pip install pandas numpy openpyxl matplotlib scikit-learn --no-cache-dir -q
 
       - name: إنشاء بيانات تجريبية
         run: |
@@ -27,12 +27,13 @@ jobs:
           echo "العميل,التاريخ,المبلغ,المنتج" > data/sample_data.csv
           echo "A,2026-01-01,100,تفاح" >> data/sample_data.csv
           echo "B,2026-01-02,200,موز" >> data/sample_data.csv
+          echo "A,2026-01-10,150,تفاح" >> data/sample_data.csv
 
       - name: تشغيل الأنبوب 🚀
         run: |
           python pipeline.py --input data/sample_data.csv --output outputs
 
-      - name: رفع المخرجات (لتحميلها)
+      - name: رفع المخرجات
         uses: actions/upload-artifact@v4
         with:
           name: نتائج_التحليل
