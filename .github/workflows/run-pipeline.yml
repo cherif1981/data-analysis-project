@@ -2,8 +2,8 @@ name: تشغيل أنبوب التحليل
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:  # تتيح لك الضغط على زر للتشغيل اليدوي
+    branches: [ master ]
+  workflow_dispatch:  # يتيح التشغيل اليدوي من زر
 
 jobs:
   run-pipeline:
@@ -21,7 +21,7 @@ jobs:
         run: |
           pip install pandas numpy openpyxl matplotlib scikit-learn
 
-      - name: إنشاء بيانات تجريبية (اختياري)
+      - name: إنشاء بيانات تجريبية
         run: |
           mkdir -p data
           echo "العميل,التاريخ,المبلغ,المنتج" > data/sample_data.csv
@@ -32,7 +32,7 @@ jobs:
         run: |
           python pipeline.py --input data/sample_data.csv --output outputs
 
-      - name: رفع المخرجات (لتحميلها بعد التنفيذ)
+      - name: رفع المخرجات (لتحميلها)
         uses: actions/upload-artifact@v4
         with:
           name: نتائج_التحليل
