@@ -1,0 +1,27 @@
+data:
+  source: "data/sales.csv"
+  date_column: "purchase_date"
+  customer_id: "customer_id"
+
+analysis:
+  rfm:
+    reference_date: "2026-09-08"
+    segments: ["Champions", "Loyal", "Potential", "New", "At Risk"]
+  
+  forecast:
+    periods: 12
+    model: "prophet"
+  
+  kpis:
+    - total_revenue
+    - average_order_value
+    - customer_acquisition_cost
+
+visualization:
+  output_dir: "reports/plots/"
+  format: "png"
+  dpi: 300
+
+reporting:
+  output_dir: "reports/"
+  formats: ["excel", "html", "pdf"]

@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Data files
+*.csv
+*.xlsx
+*.xls
+*.db
+*.sqlite
+data/*.csv
+data/*.xlsx
+
+# Reports
+reports/*.html
+reports/*.pdf
+reports/*.xlsx
+reports/plots/*.png
+reports/plots/*.jpg
+
+# Logs
+logs/*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+config/secrets.yaml
+*.key
+*.pem
