@@ -3,7 +3,7 @@ name: تشغيل أنبوب التحليل
 on:
   push:
     branches: [ master ]
-  workflow_dispatch:  # يسمح بالتشغيل اليدوي من واجهة GitHub
+  workflow_dispatch:
 
 jobs:
   run-pipeline:
@@ -24,12 +24,10 @@ jobs:
 
       - name: التحقق من وجود pipeline.py
         run: |
-          echo "الملفات الموجودة في الجذر:"
           ls -la
-          echo "-- محتوى pipeline.py (أول 10 أسطر):"
           head -10 pipeline.py || echo "الملف غير موجود!"
 
-      - name: إنشاء بيانات تجريبية (إذا لم تكن موجودة)
+      - name: إنشاء بيانات تجريبية
         run: |
           mkdir -p data
           echo "العميل,التاريخ,المبلغ,المنتج" > data/sample_data.csv
@@ -38,16 +36,18 @@ jobs:
           echo "A,2026-01-10,150,تفاح" >> data/sample_data.csv
           echo "C,2026-01-15,300,برتقال" >> data/sample_data.csv
           echo "B,2026-02-01,250,موز" >> data/sample_data.csv
+          echo "✅ تم إنشاء الملف:"
+          cat data/sample_data.csv
 
       - name: تشغيل الأنبوب 🚀
         run: |
           python pipeline.py --input data/sample_data.csv --output outputs
-          echo "✅ تم التنفيذ. محتوى مجلد outputs:"
-          ls -la outputs/ || echo "المجلد outputs غير موجود!"
+          echo "✅ محتوى مجلد outputs:"
+          ls -la outputs/ || echo "المجلد غير موجود"
 
-      - name: رفع المخرجات كملف مضغوط (Artifact)
+      - name: رفع المخرجات
         uses: actions/upload-artifact@v4
         with:
           name: نتائج_التحليل
           path: outputs/
-          if-no-files-found: warn   # ينبه إذا لم يجد ملفات ولكنه لا يفشل
+          if-no-files-found: warn
