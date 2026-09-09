@@ -16,7 +16,7 @@ def main():
     """Main function"""
     try:
         print("=" * 60)
-        print("DATA ANALYSIS PROJECT")
+        print("DATA ANALYSIS PROJECT - PRODUCTION PIPELINE")
         print("=" * 60)
         
         # Load configuration
@@ -38,24 +38,13 @@ def main():
         print("=" * 60)
         
         # Display summary
-        if 'kpis' in results:
-            kpis = results['kpis']
-            print(f"\n📊 KPIs Summary:")
-            print(f"   Total Revenue: ${kpis.get('total_revenue', 0):,.2f}")
-            print(f"   Average Order Value: ${kpis.get('average_order_value', 0):,.2f}")
-        
-        if 'rfm' in results:
-            rfm = results['rfm']
-            print(f"\n👥 Customer Summary:")
-            print(f"   Total Customers: {rfm.get('total_customers', 0)}")
-            print(f"   Active Customers: {rfm.get('active_customers', 0)}")
-        
-        if 'forecast' in results:
-            forecast = results['forecast']
-            print(f"\n🔮 Forecast Summary:")
-            print(f"   Method: {forecast.get('model', 'Unknown')}")
-            if 'summary' in forecast:
-                print(f"   Mean Forecast: ${forecast['summary'].get('mean_forecast', 0):,.2f}")
+        if results:
+            print(f"\n📊 Pipeline Summary:")
+            print(f"   Total Samples: {results.get('total_samples', 0)}")
+            print(f"   Training Samples: {results.get('train_size', 0)}")
+            print(f"   Validation Samples: {results.get('val_size', 0)}")
+            print(f"   Test Samples: {results.get('test_size', 0)}")
+            print(f"   Model Performance: {results.get('model_performance', 'N/A')}")
         
         print("\n📁 Output files saved in 'outputs/' directory")
         print("=" * 60)
